@@ -14,38 +14,3 @@ body {
 body, #root {
   @apply w-screen h-screen;
 }
-
-.search-bar {
-  @apply rounded-lg flex;
-  @apply bg-black text-sm;
-  @apply outline outline-[1px] outline-gray-200;
-  @apply my-1 mx-2 p-1;
-}
-
-.search-bar input {
-  @apply w-full ml-1;
-  @apply bg-black outline-none; 
-}
-
-.search-bar button {
-  @apply py-1 px-2 m-[-1px];
-  @apply text-xs whitespace-nowrap;
-  @apply border border-gray-200;
-  transition: background 0.2s, border 0.2s;
-}
-
-.search-bar button:first-of-type {
-  @apply rounded-tl rounded-bl;
-}
-
-.search-bar button:last-of-type {
-  @apply rounded-tr rounded-br;
-}
-
-.search-bar button:not(:last-of-type) {
-  @apply border-r-0;
-}
-
-.search-bar button:hover {
-  @apply bg-gray-100 border-gray-300;
-}

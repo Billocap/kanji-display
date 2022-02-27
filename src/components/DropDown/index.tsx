@@ -1,6 +1,6 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import styles from "./style.module.css";
 
@@ -12,6 +12,26 @@ interface Props {
   },
   onClick: (name: KanjiListObject) => void
 }
+
+function DropDownItems({items, onClick}: any) {
+  return (
+    <Fragment>
+      {
+        items.map(
+          (item: KanjiListObject, id: number) => {
+            const config = {
+              key: id,
+              className: styles.item,
+              onClick: () => onClick(item)
+            };
+
+            return <button {...config}>{item.label}</button>;
+          }
+        )
+      }
+    </Fragment>
+  );
+};
 
 export default function DropDown({text, items, onClick}: Props) {
   const [extended, setExtended] = useState(false);
@@ -25,48 +45,50 @@ export default function DropDown({text, items, onClick}: Props) {
     ].join(" ");
   };
 
-  const writeList = items.write.map(
-    (item, id) => {
-      const config = {
-        key: id,
-        className: styles.item,
-        onClick: () => onClick(item)
-      };
-
-      return <button {...config}>{item.label}</button>;
-    }
-  );
-
-  const gradeList = items.grades.map(
-    (item, id) => {
-      const config = {
-        key: id,
-        className: styles.item,
-        onClick: () => onClick(item)
-      };
-
-      return <button {...config}>{item.label}</button>;
-    }
-  );
+  const getHover = () => {
+    return navigator.maxTouchPoints == 0 ?
+      {
+        onMouseOver() {
+          setExtended(true);
+        },
+        onMouseOut() {
+          setExtended(false);
+        }
+      } :
+      {};
+  };
   
   return (
     <div
-      className={`${styles.container} group`}
-      onMouseOver={_ => setExtended(true)}
-      onMouseOut={_ => setExtended(false)}
+      className={styles.container}
+      {...getHover()}
     >
-      <span className="whitespace-nowrap">
-        {text}
+      <span
+        className="whitespace-nowrap"
+        onTouchEnd={() => setExtended(!extended)}
+      >
+        <span className="pointer-events-none">
+          {text}
+        </span>
         <FontAwesomeIcon
-          className={`${styles.icon} group-hover:rotate-180`}
+          style={{
+            transform: `rotate(${extended ? 180 : 0}deg)`
+          }}
+          className={styles.icon}
           icon={faChevronDown}
         />
       </span>
       <div className={styles.contentWindow}>
         <div className={getClassName()}>
-          {writeList}
+          <DropDownItems
+            items={items.write}
+            onClick={onClick}
+          />
           <hr className="my-4"/>
-          {gradeList}
+          <DropDownItems
+            items={items.grades}
+            onClick={onClick}
+          />
         </div>
       </div>
     </div>

@@ -1,10 +1,25 @@
+import { useEffect, useState } from "react";
+
 import styles from "./style.module.css";
 
+import api from "../../lib/api";
+
 interface Props {
-  kanji: any
+  kanji: any,
+  onClick: any
 }
 
-export default function KanjiDisplay({kanji}: Props) {
+export default function KanjiDisplay({kanji, onClick}: Props) {
+  const [words, setWords] = useState([]);
+
+  useEffect(() => {
+    api.words(kanji.kanji || "雨").then(response => {
+      console.log(response);
+
+      setWords(response)
+    });
+  }, []);
+
   const WordList = ({list}: any) => {
     return (
       <ul>
@@ -24,7 +39,7 @@ export default function KanjiDisplay({kanji}: Props) {
           list.map((item: any, id: number) => {
             return (
               <li key={id}>
-                <button>
+                <button onClick={() => onClick(item)}>
                   {item}
                 </button>
               </li>
@@ -62,21 +77,63 @@ export default function KanjiDisplay({kanji}: Props) {
           <WordList list={kanji.meanings}/>
         </div>
         <div>
-          <p>Onyomis</p>
-          <ButtonList list={kanji.on_readings}/>
-        </div>
-        <div>
           <p>Names</p>
           <ButtonList list={kanji.name_readings}/>
+        </div>
+        <div>
+          <p>Onyomis</p>
+          <ButtonList list={kanji.on_readings}/>
         </div>
         <div>
           <p>Kunyomis</p>
           <ButtonList list={kanji.kun_readings}/>
         </div>
       </div>
-      {/* <div className={styles.words}>
+      <div className={styles.words}>
         <p>Words</p>
-      </div> */}
+        {words.map((word: any) => {
+          return (
+            <div className="mb-4">
+              {
+                word.variants.map((variant: any, id: number) => {
+                  return (
+                    <span key={id} className="inline-block mr-2">
+                      <span className="text-red-500 text-xs block">
+                        {variant.pronounced}
+                      </span>
+                      <span className="text-xl block">
+                        {variant.written}
+                      </span>
+                      {variant.priorities.map((priority: any, id: number) => {
+                        return (
+                          <span key={id} className="text-red-500 text-xs mr-2">
+                            {priority}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  );
+                })
+              }
+              {
+                word.meanings.map((meaning: any, id: number) => {
+                  return (
+                    <div key={id}>
+                      {meaning.glosses.map((gloss: any, id: number) => {
+                        return (
+                          <span key={id} className="mr-2 text-sm">
+                            {gloss}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })
+              }
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

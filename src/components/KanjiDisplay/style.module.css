@@ -92,10 +92,10 @@
 }
 
 .words {
-  @apply min-h-[200px] mt-8;
+  @apply min-h-[200px] mt-8 text-white;
 }
 
-.words p {
-  @apply p-1 text-center text-white;
+.words > p {
+  @apply p-1 text-center mb-4;
   @apply border-b border-b-gray-200;
 }
