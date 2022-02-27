@@ -1,0 +1,101 @@
+.container {
+  @apply p-8 w-full cursor-default overflow-y-scroll;
+}
+
+.container header {
+  @apply flex flex-col sm:flex-row;
+  @apply justify-center items-center;
+}
+
+.character {
+  @apply relative m-4 shrink-0;
+  @apply flex flex-col justify-center items-center;
+  @apply border border-red-600; 
+  @apply rounded-[50%] w-60 h-60 bg-red-400;
+  @apply font-bold text-black;
+}
+
+.character h2 {
+  @apply text-9xl;
+}
+
+.character span {
+  @apply absolute bottom-6 text-2xl;
+}
+
+.information {
+  @apply w-full sm:w-3/6 lg:w-2/5;
+}
+
+.information h2 {
+  @apply block m-4;
+  @apply text-white font-bold;
+  @apply text-7xl sm:text-8xl;
+  @apply text-center sm:text-left;
+  @apply overflow-hidden;
+}
+
+.tool-tip {
+  @apply hidden;
+  @apply absolute rounded;
+  @apply text-white text-xs p-2;
+  @apply border border-gray-200;
+  @apply bg-gray-100;
+}
+
+.tool-tip::before {
+  content: "";
+  @apply absolute rounded-sm;
+  @apply block w-4 h-4;
+  @apply border-l border-l-gray-200;
+  @apply border-t border-t-gray-200;
+  @apply bg-gray-100;
+  @apply rotate-45 top-[-8px];
+}
+
+.information h2:hover .tool-tip {
+  @apply block;
+}
+
+.information > div {
+  @apply flex justify-between p-4;
+  @apply text-red-500 text-xs sm:text-sm md:text-base;
+}
+
+.grammar {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8;
+}
+
+.grammar div {
+  @apply rounded-md min-h-[200px];
+  @apply border border-gray-200;
+}
+
+.grammar div p {
+  @apply bg-gray-100 p-1;
+  @apply text-center text-white;
+  @apply border-b border-b-gray-200;
+}
+
+.grammar div ul {
+  @apply text-white overflow-auto p-1;
+}
+
+.grammar div ul li {
+  @apply float-left m-2;
+}
+
+.grammar div ul li button {
+  @apply rounded-md;
+  @apply bg-gray-100 py-1 px-2;
+  @apply border border-gray-200;
+}
+
+.words {
+  @apply min-h-[200px] mt-8;
+}
+
+.words p {
+  @apply p-1 text-center text-white;
+  @apply border-b border-b-gray-200;
+}

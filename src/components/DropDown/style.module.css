@@ -1,0 +1,37 @@
+.container {
+  @apply cursor-default p-4 relative z-10;
+}
+
+.icon {
+  @apply ml-2 text-xs rotate-0;
+  transition: transform 0.2s;
+}
+
+.contentWindow {
+  @apply absolute right-0 top-[100%];
+  @apply overflow-hidden pointer-events-none;
+}
+
+.content {
+  @apply py-3 min-w-[160px];
+  @apply bg-gray-100 text-white;
+  @apply border border-gray-200;
+  @apply rounded-bl-lg rounded-br-lg;
+  @apply translate-y-[-100%];
+  pointer-events: all;
+  transition: transform 0.3s ease-out;
+}
+
+.content.extended {
+  @apply translate-y-0;
+}
+
+.item {
+  @apply w-full;
+  @apply py-1 px-5;
+  @apply text-left text-sm;
+}
+
+.item:hover {
+  @apply bg-red-500;
+}
