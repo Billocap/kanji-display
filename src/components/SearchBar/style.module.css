@@ -1,8 +1,12 @@
 .container {
-  @apply rounded-lg flex;
+  @apply relative rounded-lg flex;
   @apply bg-black text-sm;
   @apply outline outline-[1px] outline-gray-200;
   @apply my-1 mx-2 p-1;
+}
+
+.container.open {
+  @apply rounded-bl-none rounded-br-none;
 }
 
 .container input {
@@ -10,25 +14,35 @@
   @apply bg-black outline-none; 
 }
 
-.container button {
+.container > span {
   @apply py-1 px-2 m-[-1px];
   @apply text-xs whitespace-nowrap;
-  @apply border border-gray-200;
-  transition: background 0.2s, border 0.2s;
+  @apply border border-gray-300 rounded;
+  @apply bg-black;
 }
 
-.container button:first-of-type {
-  @apply rounded-tl rounded-bl;
+.searchOptions {
+  @apply outline outline-[1px] outline-gray-200;
+  @apply rounded-bl-lg rounded-br-lg;
+  @apply absolute top-[100%] left-0;
+  @apply w-full z-10 overflow-hidden;
 }
 
-.container button:last-of-type {
-  @apply rounded-tr rounded-br;
+.searchOptions button {
+  @apply flex items-center justify-between;
+  @apply bg-black p-2 w-full;
+  transition: background 0.2s;
 }
 
-.container button:not(:last-of-type) {
-  @apply border-r-0;
+.searchOptions button span {
+  @apply text-gray-500 text-xs;
+  transition: color 0.2s;
 }
 
-.container button:hover {
-  @apply bg-gray-100 border-gray-300;
+.searchOptions button:hover {
+  @apply bg-red-500;
+}
+
+.searchOptions button:hover span {
+  @apply text-white;
 }

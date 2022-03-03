@@ -5,18 +5,16 @@ import styles from "./style.module.css";
 import api from "../../lib/api";
 
 interface Props {
-  kanji: any,
+  kanji: KanjiData,
   onClick: any
 }
 
 export default function KanjiDisplay({kanji, onClick}: Props) {
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<KanjiWordsList>([]);
 
   useEffect(() => {
-    api.words(kanji.kanji || "雨").then(response => {
-      console.log(response);
-
-      setWords(response)
+    api.words(kanji.kanji || "雨").then(words => {
+      if(words) setWords(words)
     });
   }, []);
 
@@ -91,9 +89,9 @@ export default function KanjiDisplay({kanji, onClick}: Props) {
       </div>
       <div className={styles.words}>
         <p>Words</p>
-        {words.map((word: any) => {
+        {words.map((word: any, id: number) => {
           return (
-            <div className="mb-4">
+            <div key={id} className="mb-4">
               {
                 word.variants.map((variant: any, id: number) => {
                   return (

@@ -1,4 +1,5 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faYinYang } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { toHiragana, toKatakana } from "wanakana";
@@ -10,43 +11,14 @@ import SearchBar from "./components/SearchBar";
 
 import { AppContext } from "./contexts/AppContext";
 
-import { defaultKanji, kanjiLists } from "./lib/constants";
+import AppConstants from "./lib/constants";
 import api from "./lib/api";
 
 export default function App() {
   const {kanjiList, setKanjiList} = useContext(AppContext);
 
-  const [kanji, setKanji] = useState<any>(defaultKanji);
-  const [screen, navigate] = useState(1);
-
-  const screens = [
-    <div className="overflow-y-scroll">
-      {
-        kanjiList.map((list: any, id: number) => {
-          return <KanjiList key={id} list={list} onClick={kanji => {
-            api.kanji(kanji).then(response => {
-              setKanji(response);
-  
-              navigate(1);
-            });
-  
-            navigate(2);
-          }}/>;
-        })
-      }
-    </div>,
-    <KanjiDisplay
-      kanji={kanji}
-      onClick={
-        (reading: string) => {
-          loadReadings(reading);
-        }
-      }
-    />,
-    <div className="text-5xl font-bold text-red-500 flex justify-center items-center w-full h-full">
-      Please Wait
-    </div>
-  ];
+  const [kanji, setKanji] = useState<any>(AppConstants.defaults.kanjiList);
+  const [screen, navigate] = useState(0);
 
   const loadList = (list: KanjiListObject) => {
     api.list(list.name).then(items => {
@@ -63,16 +35,20 @@ export default function App() {
 
   const loadReadings = (reading: string) => {
     api.readings(reading).then(response => {
-      setKanjiList([
-        {
-          label: `Kanjis for ${response.reading}`,
-          items: response.main_kanji
-        },
-        {
-          label: `Name kanjis for ${response.reading}`,
-          items: response.name_kanji
-        }
-      ]);
+      if (response) {
+        setKanjiList([
+          {
+            label: `Kanjis for ${response.reading}`,
+            items: response.main_kanji
+          },
+          {
+            label: `Name kanjis for ${response.reading}`,
+            items: response.name_kanji
+          }
+        ]);
+      } else {
+        alert("No kanjis found!");
+      }
 
       navigate(0);
     });
@@ -90,11 +66,34 @@ export default function App() {
     navigate(2);
   };
 
+  const screens = [
+    <div className="overflow-y-scroll">
+      {
+        kanjiList.map((list: any, id: number) => {
+          return <KanjiList key={id} list={list} onClick={kanji => {
+            api.kanji(kanji).then(response => {
+              setKanji(response);
+  
+              navigate(1);
+            });
+  
+            navigate(2);
+          }}/>;
+        })
+      }
+    </div>,
+    <KanjiDisplay kanji={kanji} onClick={loadReadings}/>,
+    <div className="text-5xl font-bold text-red-500 flex justify-center items-center w-full h-full">
+      <FontAwesomeIcon className="spinner m-2" icon={faYinYang}/>
+      Please Wait
+    </div>
+  ];
+
   useEffect(() => {
-    // loadList({
-    //   label: "Grade 1",
-    //   name: "grade-1"
-    // });
+    loadList({
+      label: "Grade 1",
+      name: "grade-1"
+    });
 
     api.kanji("雨").then(setKanji);
   }, []);
@@ -124,7 +123,7 @@ export default function App() {
           <DropDown
             text="Lists"
             onClick={loadList}
-            items={kanjiLists}
+            items={AppConstants.lists}
           />
           <a href="https://github.com/Billocap/Kanji-Display" target="_blank" rel="noreferrer">
             <FontAwesomeIcon

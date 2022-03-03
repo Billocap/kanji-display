@@ -57,6 +57,12 @@ export default function DropDown({text, items, onClick}: Props) {
       } :
       {};
   };
+
+  const handleItemClick = (item: KanjiListObject) => {
+    setExtended(false);
+
+    onClick(item);
+  };
   
   return (
     <div
@@ -82,12 +88,12 @@ export default function DropDown({text, items, onClick}: Props) {
         <div className={getClassName()}>
           <DropDownItems
             items={items.write}
-            onClick={onClick}
+            onClick={handleItemClick}
           />
           <hr className="my-4"/>
           <DropDownItems
             items={items.grades}
-            onClick={onClick}
+            onClick={handleItemClick}
           />
         </div>
       </div>
