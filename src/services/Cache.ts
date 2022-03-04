@@ -1,11 +1,11 @@
-const Cache = {
+const cache = {
   get kanjis() {
     const cache = JSON.parse(
       localStorage.getItem("kanji-display.cache") || "{}"
-    );
+    )
 
-    return cache.kanjis || [];
+    return cache.kanjis || []
   }
-};
+}
 
-export default Cache;
+export default cache

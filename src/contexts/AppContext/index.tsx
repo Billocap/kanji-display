@@ -19,16 +19,28 @@ export default function AppController({children}: Props) {
   const [state, dispatch] = useReducer(reducer, defaultContext)
 
   useEffect(() => {
-    api.list("all").then(list => {
+    const cached = localStorage.getItem("kanji_list")
+
+    if (cached) {
       dispatch({
         type: "kanjis",
-        value: list
+        value: JSON.parse(cached)
       })
-    })
+    } else {
+      api.list("all").then(list => {
+        dispatch({
+          type: "kanjis",
+          value: list
+        })
+
+        localStorage.setItem("kanji_list", JSON.stringify(list))
+      })
+    }
   }, [])
 
   const context = {
     ...state,
+    cache: SessionCache,
     async loadList({label, name}: KanjiListObject) {
       const previousList = SessionCache.get("previous@list")
 

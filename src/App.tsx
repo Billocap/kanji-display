@@ -27,8 +27,6 @@ export default function App() {
       label: "Grade 1",
       name: "grade-1"
     })
-
-    loadKanji("雨")
   }, [])
 
   return (
@@ -58,7 +56,7 @@ export default function App() {
               navigate(2)
             }}
             searchKunyomi={kunyomi => {
-              loadReadings(toKatakana(kunyomi, {
+              loadReadings(toHiragana(kunyomi, {
                 customKanaMapping: {
                   "-": "-"
                 }

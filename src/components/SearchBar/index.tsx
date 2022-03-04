@@ -1,11 +1,11 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fragment, useContext, useState } from "react";
-import { toHiragana, toKatakana } from "wanakana";
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Fragment, useContext, useState } from "react"
+import { toHiragana, toKatakana } from "wanakana"
 
-import { AppContext } from "../../contexts/AppContext";
+import { AppContext } from "../../contexts/AppContext"
 
-import styles from "./style.module.css";
+import styles from "./style.module.css"
 
 interface Props {
   searchKanji: (kanji: string) => void,
@@ -14,20 +14,24 @@ interface Props {
 }
 
 export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Props) {
-  const [query, setQuery] = useState("");
-  const {kanjis} = useContext(AppContext);
+  const [query, setQuery] = useState("")
+  const [extended, setExtended] = useState(false)
+
+  const {kanjis, cache} = useContext(AppContext)
+
+  const previousKanjis = cache.get("previous@kanjis")
 
   const searchKanjiHandler = () => {
     if (kanjis.includes(query)) {
       searchKanji(query)
     } else {
-      alert("Invalid Kanji!");
+      alert("Invalid Kanji!")
     }
-  };
+  }
 
   const getClass = () => {
-    return query.length ? styles.open : "";
-  };
+    return extended ? styles.open : ""
+  }
 
   const searchOptions = () => {
     if (query.length) {
@@ -37,7 +41,7 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
             {query}
             <span>漢字</span>
           </button>
-        );
+        )
       } else {
         return (
           <Fragment>
@@ -58,25 +62,42 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
               </span>
             </button>
           </Fragment>
-        );
+        )
       }
     }
-  };
+  }
   
   return (
     <div className={[styles.container, getClass()].join(" ")}>
-      <input onChange={e => setQuery(e.target.value)}/>
+      <input
+        onChange={e => {
+          setQuery(e.target.value)
+          setExtended(true)
+        }}
+        onFocus={() => {
+          if (previousKanjis.size) setExtended(true)
+        }}
+        onBlur={() => setExtended(false)}
+      />
       <span>
         <FontAwesomeIcon icon={faSearch}/>
       </span>
       <div
         style={{
-          display: query.length ? "block" : "none"
+          display: extended ? "block" : "none"
         }}
         className={styles.searchOptions}
       >
         {searchOptions()}
+        {Array.from<any>(previousKanjis.keys()).slice(0, 10).map((item, id) => {
+          return (
+            <button key={id} onClick={() => searchKanji(item)}>
+              {item}
+              <span>漢字</span>
+            </button>
+          )
+        })}
       </div>
     </div>
-  );
+  )
 }
