@@ -71,13 +71,18 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
     <div className={[styles.container, getClass()].join(" ")}>
       <input
         onChange={e => {
+          if (previousKanjis.size || query.length) setExtended(true)
+          
           setQuery(e.target.value)
-          setExtended(true)
         }}
         onFocus={() => {
-          if (previousKanjis.size) setExtended(true)
+          if (previousKanjis.size || query.length) setExtended(true)
         }}
-        onBlur={() => setExtended(false)}
+        onBlur={() => {
+          setTimeout(() => {
+            setExtended(false)
+          }, 100)
+        }}
       />
       <span>
         <FontAwesomeIcon icon={faSearch}/>

@@ -1,11 +1,7 @@
-const cache = {
-  get kanjis() {
-    const cache = JSON.parse(
-      localStorage.getItem("kanji-display.cache") || "{}"
-    )
+const cached = localStorage.getItem("kanji-display@cache")
 
-    return cache.kanjis || []
-  }
+const cache = cached ? JSON.parse(cached) : {
+  kanjiList: []
 }
 
 export default cache
