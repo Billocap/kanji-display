@@ -11,14 +11,13 @@
 
 .container input {
   @apply w-full ml-1;
-  @apply bg-black outline-none; 
+  @apply bg-black outline-none;
 }
 
 .container > span {
   @apply py-1 px-2 m-[-1px];
-  @apply text-xs whitespace-nowrap;
-  @apply border border-gray-300 rounded;
-  @apply bg-black;
+  @apply whitespace-nowrap;
+  @apply text-xs text-gray-200;
 }
 
 .searchOptions {

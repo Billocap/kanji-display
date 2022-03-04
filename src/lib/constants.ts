@@ -1,26 +1,4 @@
-const defaultKanjiList = [{
-  label: "",
-  items: []
-}];
-
-const defaultKanji: KanjiData = {
-  meanings: [""],
-  on_readings: [""],
-  name_readings: [""],
-  kun_readings: [""],
-  stroke_count: 8,
-  unicode: "",
-  grade: 1,
-  jlpt: null,
-  heisig_en: null,
-  kanji: ""
-};
-
-const cache = JSON.parse(
-  localStorage.getItem("kanji-display.cache") || "{}"
-);
-
-const AppConstants: AppModel = {
+const AppConstants = {
   lists: {
     write: [
       {
@@ -66,12 +44,7 @@ const AppConstants: AppModel = {
         label: "Grade 8"
       }
     ]
-  },
-  kanjis: cache.kanjis || [],
-  defaults: {
-    kanji: cache.kanji || defaultKanji,
-    kanjiList: cache.kanjiList || defaultKanjiList
   }
-};
+}
 
-export default AppConstants;
+export default AppConstants

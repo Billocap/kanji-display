@@ -1,102 +1,35 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faYinYang } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { toHiragana, toKatakana } from "wanakana";
 
 import DropDown from "./components/DropDown";
-import KanjiList from "./components/KanjiList";
-import KanjiDisplay from "./components/KanjiDisplay";
 import SearchBar from "./components/SearchBar";
 
 import { AppContext } from "./contexts/AppContext";
+import { ScreenContext } from "./contexts/ScreenContext";
 
 import AppConstants from "./lib/constants";
-import api from "./lib/api";
 
 export default function App() {
-  const {kanjiList, setKanjiList} = useContext(AppContext);
+  const {
+    loadList,
+    loadKanji,
+    loadReadings
+  } = useContext(AppContext)
 
-  const [kanji, setKanji] = useState<any>(AppConstants.defaults.kanjiList);
-  const [screen, navigate] = useState(0);
-
-  const loadList = (list: KanjiListObject) => {
-    api.list(list.name).then(items => {
-      setKanjiList([{
-        label: list.label,
-        items
-      }]);
-
-      navigate(0);
-    });
-
-    navigate(2);
-  };
-
-  const loadReadings = (reading: string) => {
-    api.readings(reading).then(response => {
-      if (response) {
-        setKanjiList([
-          {
-            label: `Kanjis for ${response.reading}`,
-            items: response.main_kanji
-          },
-          {
-            label: `Name kanjis for ${response.reading}`,
-            items: response.name_kanji
-          }
-        ]);
-      } else {
-        alert("No kanjis found!");
-      }
-
-      navigate(0);
-    });
-
-    navigate(2);
-  };
-
-  const loadKanji = (kanji: string) => {
-    api.kanji(kanji).then(response => {
-      setKanji(response);
-
-      navigate(1);
-    });
-    
-    navigate(2);
-  };
-
-  const screens = [
-    <div className="overflow-y-scroll">
-      {
-        kanjiList.map((list: any, id: number) => {
-          return <KanjiList key={id} list={list} onClick={kanji => {
-            api.kanji(kanji).then(response => {
-              setKanji(response);
-  
-              navigate(1);
-            });
-  
-            navigate(2);
-          }}/>;
-        })
-      }
-    </div>,
-    <KanjiDisplay kanji={kanji} onClick={loadReadings}/>,
-    <div className="text-5xl font-bold text-red-500 flex justify-center items-center w-full h-full">
-      <FontAwesomeIcon className="spinner m-2" icon={faYinYang}/>
-      Please Wait
-    </div>
-  ];
+  const {
+    CurrentScreen, navigate
+  } = useContext(ScreenContext)
 
   useEffect(() => {
     loadList({
       label: "Grade 1",
       name: "grade-1"
-    });
+    })
 
-    api.kanji("雨").then(setKanji);
-  }, []);
+    loadKanji("雨")
+  }, [])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -106,24 +39,48 @@ export default function App() {
             Kanji Display
           </h1>
           <SearchBar
-            searchKanji={loadKanji}
-            searchOnyomi={onyomi => loadReadings(toKatakana(onyomi, {
-              customKanaMapping: {
-                "-": "-"
-              }
-            }))}
-            searchKunyomi={kunyomi => loadReadings(toHiragana(kunyomi, {
-              customKanaMapping: {
-                "-": "-"
-              }
-            }))}
+            searchKanji={kanji => {
+              loadKanji(kanji).then(() => {
+                navigate(1)
+              });
+              
+              navigate(2)
+            }}
+            searchOnyomi={onyomi => {
+              loadReadings(toKatakana(onyomi, {
+                customKanaMapping: {
+                  "-": "-"
+                }
+              })).then(() => {
+                navigate(0)
+              });
+              
+              navigate(2)
+            }}
+            searchKunyomi={kunyomi => {
+              loadReadings(toKatakana(kunyomi, {
+                customKanaMapping: {
+                  "-": "-"
+                }
+              })).then(() => {
+                navigate(0)
+              });
+              
+              navigate(2)
+            }}
           />
         </div>
         <div className="flex flex-row items-center justify-center">
           <DropDown
             text="Lists"
-            onClick={loadList}
-            items={AppConstants.lists}
+            onClick={list => {
+              loadList(list).then(() => {
+                navigate(0)
+              });
+              
+              navigate(2)
+            }}
+            items={AppConstants.lists as any}
           />
           <a href="https://github.com/Billocap/Kanji-Display" target="_blank" rel="noreferrer">
             <FontAwesomeIcon
@@ -133,7 +90,7 @@ export default function App() {
           </a>
         </div>
       </div>
-      {screens[screen]}
+      {CurrentScreen}
     </div>
   )
 }
