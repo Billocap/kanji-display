@@ -1,4 +1,4 @@
-import { faYinYang } from "@fortawesome/free-solid-svg-icons";
+import { faCloud, faMountain, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {createContext, useContext, useState} from "react"
 
@@ -20,7 +20,7 @@ export default function ScreenNavigator({children}: Props) {
     loadReadings
   } = useContext(AppContext);
   
-  const [screen, navigate] = useState(0);
+  const [screen, navigate] = useState(1);
 
   const screens = [
     <div className="overflow-y-scroll">
@@ -44,9 +44,8 @@ export default function ScreenNavigator({children}: Props) {
         navigate(2)
       }
     }/>,
-    <div className="text-5xl font-bold text-red-500 flex justify-center items-center w-full h-full">
-      <FontAwesomeIcon className="spinner m-2" icon={faYinYang}/>
-      Please Wait
+    <div className="text-3xl md:text-5xl font-bold text-red-500 flex items-center justify-center w-full h-full">
+      L<FontAwesomeIcon className="spinner text-xl md:text-3xl" icon={faSun}/>ading
     </div>
   ];
   

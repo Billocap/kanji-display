@@ -1,4 +1,7 @@
-import styles from "./style.module.css";
+import Word from "./Word"
+
+import styles from "./style.module.css"
+import { useRef, useState } from "react";
 
 interface Props {
   kanji: any,
@@ -6,7 +9,43 @@ interface Props {
 }
 
 export default function KanjiDisplay({kanji, onClick}: Props) {
-  const WordList = ({list}: any) => {
+  const [page, setPage] = useState(50)
+  const list = useRef<null | HTMLDivElement>(null)
+  const controlHeader = useRef<null | HTMLHeadingElement>(null)
+  const baseHeader = useRef<null | HTMLHeadingElement>(null)
+
+  const textFit = () => {
+    const control = controlHeader.current
+    const base = baseHeader.current
+
+    if (!control || !base) return false
+
+    return control.getBoundingClientRect().width < base.getBoundingClientRect().width
+  }
+
+  const ToolTip = () => {
+    // if (!textFit()) return null
+
+    return (
+      <div className="tool-tip">
+        {(kanji.data.heisig_en || kanji.data.meanings[0] || "").toUpperCase()}
+      </div>
+    )
+  }
+
+  const handleScroll = () => {
+    const target = list.current
+
+    if (target) {
+      const rect = target.getBoundingClientRect()
+
+      if (rect.top <= window.innerHeight - rect.height) {
+        setPage(page => page + 50)
+      }
+    }
+  }
+
+  const SimpleList = ({list}: any) => {
     return (
       <ul>
         {
@@ -37,18 +76,19 @@ export default function KanjiDisplay({kanji, onClick}: Props) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onScroll={handleScroll}>
+      <h2 ref={controlHeader} className="opacity-0 absolute inline text-white font-bold text-7xl sm:text-8xl text-center sm:text-left">
+        {(kanji.data.heisig_en || kanji.data.meanings[0] || "").toUpperCase()}
+      </h2>
       <header>
         <div className={styles.character}>
           <h2>{kanji.data.kanji}</h2>
           <span>{kanji.data.unicode.toUpperCase()}</span>
         </div>
         <div className={styles.information}>
-          <h2>
-            {(kanji.data.heisig_en || kanji.data.meanings[0]).toUpperCase()}
-            <div className={styles['tool-tip']}>
-              {(kanji.data.heisig_en || kanji.data.meanings[0]).toUpperCase()}
-            </div>
+          <h2 ref={baseHeader} className="tool-tip-holder">
+            {(kanji.data.heisig_en || kanji.data.meanings[0] || "").toUpperCase()}
+            <ToolTip/>
           </h2>
           <div>
             <span>STROKE COUNT {kanji.data.stroke_count}</span>
@@ -60,7 +100,7 @@ export default function KanjiDisplay({kanji, onClick}: Props) {
       <div className={styles.grammar}>
         <div>
           <p>Meanings</p>
-          <WordList list={kanji.data.meanings}/>
+          <SimpleList list={kanji.data.meanings}/>
         </div>
         <div>
           <p>Names</p>
@@ -75,50 +115,9 @@ export default function KanjiDisplay({kanji, onClick}: Props) {
           <ButtonList list={kanji.data.kun_readings}/>
         </div>
       </div>
-      <div className={styles.words}>
+      <div ref={list} className={styles.words}>
         <p>Words</p>
-        {kanji.words.map((word: any, id: number) => {
-          return (
-            <div key={id} className="mb-4">
-              {
-                word.variants.map((variant: any, id: number) => {
-                  return (
-                    <span key={id} className="inline-block mr-2">
-                      <span className="text-red-500 text-xs block">
-                        {variant.pronounced}
-                      </span>
-                      <span className="text-xl block">
-                        {variant.written}
-                      </span>
-                      {variant.priorities.map((priority: any, id: number) => {
-                        return (
-                          <span key={id} className="text-red-500 text-xs mr-2">
-                            {priority}
-                          </span>
-                        );
-                      })}
-                    </span>
-                  );
-                })
-              }
-              {
-                word.meanings.map((meaning: any, id: number) => {
-                  return (
-                    <div key={id}>
-                      {meaning.glosses.map((gloss: any, id: number) => {
-                        return (
-                          <span key={id} className="mr-2 text-sm">
-                            {gloss}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  );
-                })
-              }
-            </div>
-          );
-        })}
+        {kanji.words.slice(0, page).map((word: any, id: number) => <Word key={id} word={word}/>)}
       </div>
     </div>
   );

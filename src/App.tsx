@@ -27,6 +27,8 @@ export default function App() {
       label: "Grade 1",
       name: "grade-1"
     })
+
+    loadKanji("雨")
   }, [])
 
   return (

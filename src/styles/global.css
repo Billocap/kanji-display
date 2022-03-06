@@ -15,8 +15,35 @@ body, #root {
   @apply w-screen h-screen;
 }
 
+.tool-tip-holder {
+  @apply relative;
+}
+
+.tool-tip-holder:hover .tool-tip {
+  @apply block;
+}
+
+.tool-tip {
+  @apply hidden;
+  @apply absolute rounded top-[100%] z-10;
+  @apply text-white text-xs p-2;
+  @apply border border-gray-200;
+  @apply bg-gray-100;
+  @apply mt-[10px];
+}
+
+.tool-tip::before {
+  content: "";
+  @apply absolute rounded-sm;
+  @apply block w-4 h-4;
+  @apply border-l border-l-gray-200;
+  @apply border-t border-t-gray-200;
+  @apply bg-gray-100;
+  @apply rotate-45 top-[-8px];
+}
+
 .spinner {
-  animation: loading 1s infinite;
+  animation: loading 2s infinite linear;
 }
 
 @keyframes loading {

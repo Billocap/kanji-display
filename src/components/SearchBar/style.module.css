@@ -24,7 +24,7 @@
   @apply outline outline-[1px] outline-gray-200;
   @apply rounded-bl-lg rounded-br-lg;
   @apply absolute top-[100%] left-0;
-  @apply w-full z-10 overflow-hidden;
+  @apply w-full z-20 overflow-hidden;
 }
 
 .searchOptions button {

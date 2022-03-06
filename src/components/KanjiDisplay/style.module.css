@@ -16,7 +16,7 @@
 }
 
 .character h2 {
-  @apply text-9xl;
+  @apply text-9xl font-normal;
 }
 
 .character span {
@@ -25,36 +25,14 @@
 
 .information {
   @apply w-full sm:w-3/6 lg:w-2/5;
-}
-
-.information h2 {
-  @apply block m-4;
-  @apply text-white font-bold;
-  @apply text-7xl sm:text-8xl;
-  @apply text-center sm:text-left;
   @apply overflow-hidden;
 }
 
-.tool-tip {
-  @apply hidden;
-  @apply absolute rounded;
-  @apply text-white text-xs p-2;
-  @apply border border-gray-200;
-  @apply bg-gray-100;
-}
-
-.tool-tip::before {
-  content: "";
-  @apply absolute rounded-sm;
-  @apply block w-4 h-4;
-  @apply border-l border-l-gray-200;
-  @apply border-t border-t-gray-200;
-  @apply bg-gray-100;
-  @apply rotate-45 top-[-8px];
-}
-
-.information h2:hover .tool-tip {
-  @apply block;
+.information h2 {
+  @apply block m-4 whitespace-nowrap;
+  @apply text-white font-bold;
+  @apply text-7xl sm:text-8xl;
+  @apply text-center sm:text-left;
 }
 
 .information > div {
@@ -67,7 +45,7 @@
 }
 
 .grammar div {
-  @apply rounded-md min-h-[200px];
+  @apply rounded-md min-h-[200px] overflow-hidden;
   @apply border border-gray-200;
 }
 
