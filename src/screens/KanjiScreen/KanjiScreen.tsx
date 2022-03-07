@@ -72,7 +72,7 @@ export default function KanjiScreen() {
       </div>
       <div ref={loaded} className={styles.words}>
         <p>Words</p>
-        {kanji.words.slice(0, page).map((word, id) => {
+        {kanji.words.slice(0, page).map((word: any, id: number) => {
           return <KanjiWord key={id} word={word}/>
         })}
       </div>
