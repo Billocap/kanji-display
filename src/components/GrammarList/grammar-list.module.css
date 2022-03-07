@@ -1,0 +1,19 @@
+.container {
+  @apply rounded-md min-h-[200px];
+  @apply border border-gray-200;
+  @apply overflow-hidden;
+}
+
+.container p {
+  @apply bg-gray-100 p-1;
+  @apply text-center text-white;
+  @apply border-b border-b-gray-200;
+}
+
+.container ul {
+  @apply text-white overflow-auto p-1;
+}
+
+.container ul li {
+  @apply float-left m-2;
+}

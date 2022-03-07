@@ -27,26 +27,28 @@ interface KanjiReadings {
 	name_kanji: string[]
 }
 
-type KanjiWordsList = {
-	meanings: {
-		glosses: string[]
-	}[],
-	variants: {
-		written: string,
-		pronounced: string,
-		priorities: string[]
-	}[]
-}[]
+interface KanjiWordMeaning {
+	glosses: string[]
+}
+
+interface KanjiWordVariant {
+	written: string,
+	pronounced: string,
+	priorities: string[]
+}
+
+interface KanjiWord {
+	meanings: KanjiWordMeaning[],
+	variants: KanjiWordVariant[]
+}
+
+type KanjiWordsList = KanjiWord[]
 // #endregion
 
-interface AppModel {
-	lists: {
-		write: KanjiListObject[],
-		grades: KanjiListObject[]
-	},
+interface AppContext {
 	kanjis: string[],
-	defaults: {
-		kanji: KanjiData,
-		kanjiList: KanjiListObject
-	}
-}
+	kanjiList: {
+	  label: string,
+	  items: number[]
+	}[]
+  }

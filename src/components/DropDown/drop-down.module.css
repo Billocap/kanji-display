@@ -25,13 +25,3 @@
 .content.extended {
   @apply translate-y-0;
 }
-
-.item {
-  @apply w-full;
-  @apply py-1 px-5;
-  @apply text-left text-sm;
-}
-
-.item:hover {
-  @apply bg-red-500;
-}

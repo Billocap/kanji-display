@@ -1,4 +1,4 @@
-import styles from "./style.module.css";
+import styles from "./kanji-list.module.css"
 
 interface Props {
   list: {
@@ -16,18 +16,18 @@ export default function KanjiList({list, onClick}: Props) {
           {kanji}
         </button>
       </li>
-    );
-  });
+    )
+  })
 
   return (
-    <section className={styles.container}>
+    <div  className={styles.container}>
       <header>
-        <h2>{list.label}</h2>
+        <p>{list.label}</p>
         <span>{list.items.length} results</span>
       </header>
       <ul>
         {kanjiList}
       </ul>
-    </section>
-  );
+    </div>
+  )
 }

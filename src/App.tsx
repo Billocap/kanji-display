@@ -26,7 +26,7 @@ export default function App() {
     loadList({
       label: "Grade 1",
       name: "grade-1"
-    })
+    }).then(() => navigate("list"))
 
     loadKanji("雨")
   }, [])
@@ -41,10 +41,10 @@ export default function App() {
           <SearchBar
             searchKanji={kanji => {
               loadKanji(kanji).then(() => {
-                navigate(1)
+                navigate("kanji")
               });
               
-              navigate(2)
+              navigate("loading")
             }}
             searchOnyomi={onyomi => {
               loadReadings(toKatakana(onyomi, {
@@ -52,10 +52,10 @@ export default function App() {
                   "-": "-"
                 }
               })).then(() => {
-                navigate(0)
+                navigate("list")
               });
               
-              navigate(2)
+              navigate("loading")
             }}
             searchKunyomi={kunyomi => {
               loadReadings(toHiragana(kunyomi, {
@@ -63,22 +63,30 @@ export default function App() {
                   "-": "-"
                 }
               })).then(() => {
-                navigate(0)
+                navigate("list")
               });
               
-              navigate(2)
+              navigate("loading")
             }}
           />
         </div>
         <div className="flex flex-row items-center justify-center">
+          {/* <div className="flex-shrink-0 border border-gray-200 rounded-md m-2">
+            <button className="p-1 sm:p-2">
+              jp
+            </button>
+            <button className="p-1 sm:p-2">
+              en
+            </button>
+          </div> */}
           <DropDown
             text="Lists"
             onClick={list => {
               loadList(list).then(() => {
-                navigate(0)
+                navigate("list")
               });
               
-              navigate(2)
+              navigate("loading")
             }}
             items={AppConstants.lists as any}
           />
@@ -90,7 +98,7 @@ export default function App() {
           </a>
         </div>
       </div>
-      {CurrentScreen}
+      <CurrentScreen/>
     </div>
   )
 }

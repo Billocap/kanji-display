@@ -3,18 +3,17 @@
 }
 
 .container header {
-  @apply flex justify-between items-end;
-  @apply p-4 whitespace-nowrap;
+  @apply block p-4 whitespace-nowrap;
 }
 
-.container header h2 {
-  @apply text-2xl sm:text-4xl mr-2;
-  @apply text-white overflow-hidden;
+.container header p {
+  @apply text-2xl sm:text-4xl;
+  @apply text-white;
 }
 
 .container header span {
   @apply text-xs sm:text-sm;
-  @apply text-red-500;
+  @apply text-red-500 flex-shrink-0;
 }
 
 .container ul {

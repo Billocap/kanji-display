@@ -24,7 +24,7 @@ body, #root {
 }
 
 .tool-tip {
-  @apply hidden;
+  @apply hidden whitespace-nowrap;
   @apply absolute rounded top-[100%] z-10;
   @apply text-white text-xs p-2;
   @apply border border-gray-200;
@@ -42,20 +42,14 @@ body, #root {
   @apply rotate-45 top-[-8px];
 }
 
-.spinner {
-  animation: loading 2s infinite linear;
+.scroll-spy {
+  @apply fixed right-8 bottom-8;
+  @apply text-white text-xl;
+  @apply leading-[0] p-3 shadow;
+  @apply bg-red-300 rounded-full;
+  transition: box-shadow 0.2s, bottom 0.2s, background 0.2s;
 }
 
-@keyframes loading {
-  from {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(180deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+.scroll-spy:hover {
+  @apply shadow-md bottom-9 bg-red-500;
 }

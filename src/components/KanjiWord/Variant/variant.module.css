@@ -1,0 +1,15 @@
+.variant {
+  @apply inline-block mr-2;
+}
+
+.variant > span:first-of-type {
+  @apply text-red-500 text-xs mr-2;
+}
+
+.variant > span:last-of-type {
+  @apply text-xl block;
+}
+
+.variant .star {
+  @apply text-red-500 text-[7px] ml-1;
+}

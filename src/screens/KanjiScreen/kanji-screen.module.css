@@ -1,0 +1,22 @@
+.container {
+  @apply relative p-8 w-full cursor-default overflow-y-scroll;
+}
+
+.grammar {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8;
+}
+
+.grammar button {
+  @apply rounded-md;
+  @apply bg-gray-100 py-1 px-2;
+  @apply border border-gray-200;
+}
+
+.words {
+  @apply min-h-[200px] mt-8 text-white;
+}
+
+.words > p {
+  @apply p-1 text-center mb-4;
+  @apply border-b border-b-gray-200;
+}

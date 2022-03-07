@@ -5,7 +5,7 @@ import { toHiragana, toKatakana } from "wanakana"
 
 import { AppContext } from "../../contexts/AppContext"
 
-import styles from "./style.module.css"
+import styles from "./search-bar.module.css"
 
 interface Props {
   searchKanji: (kanji: string) => void,
