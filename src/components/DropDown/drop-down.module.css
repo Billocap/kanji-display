@@ -1,5 +1,11 @@
 .container {
-  @apply cursor-default p-4 relative z-10;
+  @apply inline-block h-full;
+  @apply relative z-10;
+  cursor: default;
+}
+
+.trigger {
+  @apply flex flex-shrink-0 justify-center items-center h-full;
 }
 
 .icon {

@@ -9,10 +9,10 @@ import styles from "./drop-down.module.css"
 interface Props {
   text: string,
   items: {
-    write: KanjiListObject[],
-    grades: KanjiListObject[]
+    write: KanjiCategoryRequest[],
+    grades: KanjiCategoryRequest[]
   },
-  onClick: (name: KanjiListObject) => void
+  onClick: (name: KanjiCategoryRequest) => void
 }
 
 export default function DropDown({text, items, onClick}: Props) {
@@ -40,21 +40,19 @@ export default function DropDown({text, items, onClick}: Props) {
       null
   }
 
-  const handleItemClick = (item: KanjiListObject) => {
+  const handleItemClick = (item: KanjiCategoryRequest) => {
     setExtended(false)
 
     onClick(item)
   }
+
+  const handleTouchEnd = () => {
+    setExtended(!extended)
+  }
   
   return (
-    <div
-      className={styles.container}
-      {...getHover()}
-    >
-      <span
-        className="whitespace-nowrap"
-        onTouchEnd={() => setExtended(!extended)}
-      >
+    <div className={styles.container} {...getHover()}>
+      <div className={styles.trigger} onTouchEnd={handleTouchEnd}>
         <span className="pointer-events-none">
           {text}
         </span>
@@ -65,7 +63,7 @@ export default function DropDown({text, items, onClick}: Props) {
           className={styles.icon}
           icon={faChevronDown}
         />
-      </span>
+      </div>
       <div className={styles.contentWindow}>
         <div className={getClassName()}>
           <DropDownItems items={items.write} onClick={handleItemClick}/>

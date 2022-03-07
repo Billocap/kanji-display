@@ -35,7 +35,8 @@ const defaultContext = {
         ]
       }
     ]
-  }
+  },
+  lang: "jp"
 }
 
 export default defaultContext

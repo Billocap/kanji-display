@@ -1,34 +1,69 @@
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect } from "react";
-import { toHiragana, toKatakana } from "wanakana";
+import { faGithub } from "@fortawesome/free-brands-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useContext, useEffect } from "react"
+import { toHiragana, toKatakana } from "wanakana"
 
-import DropDown from "./components/DropDown";
-import SearchBar from "./components/SearchBar";
+import DropDown from "./components/DropDown"
+import SearchBar from "./components/SearchBar"
+import { AppContext } from "./contexts/AppContext"
+import { ScreenContext } from "./contexts/ScreenContext"
 
-import { AppContext } from "./contexts/AppContext";
-import { ScreenContext } from "./contexts/ScreenContext";
-
-import AppConstants from "./lib/constants";
+const lists = {
+  write: [
+    {
+      name: "all",
+      label: "All"
+    },
+    {
+      name: "joyo",
+      label: "Joyo"
+    },
+    {
+      name: "jinmeiyo",
+      label: "Jinmeiyo"
+    }
+  ],
+  grades: [
+    {
+      name: "grade-1",
+      label: "Grade 1"
+    },
+    {
+      name: "grade-2",
+      label: "Grade 2"
+    },
+    {
+      name: "grade-3",
+      label: "Grade 3"
+    },
+    {
+      name: "grade-4",
+      label: "Grade 4"
+    },
+    {
+      name: "grade-5",
+      label: "Grade 5"
+    },
+    {
+      name: "grade-6",
+      label: "Grade 6"
+    },
+    {
+      name: "grade-8",
+      label: "Grade 8"
+    }
+  ]
+}
 
 export default function App() {
-  const {
-    loadList,
-    loadKanji,
-    loadReadings
-  } = useContext(AppContext)
-
-  const {
-    CurrentScreen, navigate
-  } = useContext(ScreenContext)
+  const {loadCategory, loadKanji, loadReadings} = useContext(AppContext)
+  const {CurrentScreen, navigate} = useContext(ScreenContext)
 
   useEffect(() => {
-    loadList({
+    loadCategory({
       label: "Grade 1",
       name: "grade-1"
     }).then(() => navigate("list"))
-
-    loadKanji("雨")
   }, [])
 
   return (
@@ -42,7 +77,7 @@ export default function App() {
             searchKanji={kanji => {
               loadKanji(kanji).then(() => {
                 navigate("kanji")
-              });
+              })
               
               navigate("loading")
             }}
@@ -53,7 +88,7 @@ export default function App() {
                 }
               })).then(() => {
                 navigate("list")
-              });
+              })
               
               navigate("loading")
             }}
@@ -64,33 +99,33 @@ export default function App() {
                 }
               })).then(() => {
                 navigate("list")
-              });
+              })
               
               navigate("loading")
             }}
           />
         </div>
-        <div className="flex flex-row items-center justify-center">
-          {/* <div className="flex-shrink-0 border border-gray-200 rounded-md m-2">
-            <button className="p-1 sm:p-2">
-              jp
+        <div className="flex flex-row items-center justify-center flex-shrink-0 h-full">
+          {/* <div className="flex-shrink-0 border border-gray-200 rounded-md my-2 text-xs mr-2">
+            <button className="py-1 px-2 border-r border-r-gray-200" onClick={() => setLang("en")}>
+              かな
             </button>
-            <button className="p-1 sm:p-2">
-              en
+            <button className="py-1 px-2" onClick={() => setLang("jp")}>
+              Aa
             </button>
           </div> */}
           <DropDown
             text="Lists"
             onClick={list => {
-              loadList(list).then(() => {
+              loadCategory(list).then(() => {
                 navigate("list")
-              });
+              })
               
               navigate("loading")
             }}
-            items={AppConstants.lists as any}
+            items={lists as any}
           />
-          <a href="https://github.com/Billocap/Kanji-Display" target="_blank" rel="noreferrer">
+          <a className="ml-2" href="https://github.com/Billocap/Kanji-Display" target="_blank" rel="noreferrer">
             <FontAwesomeIcon
               className="text-2xl hover:text-white text-gray-500 md:mx-4 mx-2"
               icon={faGithub}

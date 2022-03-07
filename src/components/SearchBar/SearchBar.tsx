@@ -1,7 +1,7 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Fragment, useContext, useState } from "react"
-import { toHiragana, toKatakana } from "wanakana"
+import { isHiragana, toHiragana, toKatakana } from "wanakana"
 
 import { AppContext } from "../../contexts/AppContext"
 
@@ -19,7 +19,8 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
 
   const {kanjis, cache} = useContext(AppContext)
 
-  const previousKanjis = cache.get("previous@kanjis")
+  const previousKanjis = cache.get("kanjis")
+  const previousReadings = cache.get("readings")
 
   const searchKanjiHandler = () => {
     if (kanjis.includes(query)) {
@@ -71,12 +72,12 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
     <div className={[styles.container, getClass()].join(" ")}>
       <input
         onChange={e => {
-          if (previousKanjis.size || query.length) setExtended(true)
+          if (previousReadings.size || previousKanjis.size || query.length) setExtended(true)
           
           setQuery(e.target.value)
         }}
         onFocus={() => {
-          if (previousKanjis.size || query.length) setExtended(true)
+          if (previousReadings.size || previousKanjis.size || query.length) setExtended(true)
         }}
         onBlur={() => {
           setTimeout(() => {
@@ -94,11 +95,29 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
         className={styles.searchOptions}
       >
         {searchOptions()}
-        {Array.from<any>(previousKanjis.keys()).slice(0, 10).map((item, id) => {
+        {Array.from<any>(previousKanjis.keys()).map((item, id) => {
           return (
             <button key={id} onClick={() => searchKanji(item)}>
               {item}
               <span>漢字</span>
+            </button>
+          )
+        })}
+        {Array.from<any>(previousReadings.keys()).map((item, id) => {
+          return (
+            <button key={id} onClick={() => {
+              if (isHiragana(item)) {
+                searchKunyomi(item)
+              } else {
+                searchOnyomi(item)
+              }
+            }}>
+              {item}
+              <span>
+                {item}
+                -
+                {isHiragana(item) ? "訓読み" : "音読み"}
+              </span>
             </button>
           )
         })}

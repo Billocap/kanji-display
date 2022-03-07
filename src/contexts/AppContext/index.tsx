@@ -1,6 +1,7 @@
 import {createContext, useEffect, useReducer} from "react"
 
 import api from "../../services/api"
+import SessionCache from "../../lib/SessionCache"
 
 import defaultContext from "./default"
 import reducer from "./reducer"
@@ -9,9 +10,7 @@ interface Props {
   children: any
 }
 
-const SessionCache = new Map()
-
-SessionCache.set("previous@kanjis", new Map())
+const sessionCache = new SessionCache()
 
 export const AppContext = createContext({} as any)
 
@@ -40,89 +39,116 @@ export default function AppController({children}: Props) {
 
   const context = {
     ...state,
-    cache: SessionCache,
-    async loadList({label, name}: KanjiListObject) {
-      const previousList = SessionCache.get("previous@list")
-
-      if (previousList && previousList.label == label) {
-        dispatch({
-          type: "kanji_list",
-          value: [previousList]
-        })
-
-        return true
-      }
-
-      const items = await api.list(name)
-
-      SessionCache.set("previous@list", {
-        label, items
+    cache: sessionCache,
+    setLang(lang: string) {
+      dispatch({
+        type: "lang",
+        value: lang
       })
-  
-      if (items) {
+    },
+    async loadCategory({label, name}: KanjiCategoryRequest) {
+      try {
+        const cachedList = await sessionCache.loadCategory(label)
+
         dispatch({
           type: "kanji_list",
-          value: [{
-            label,
-            items
-          }]
+          value: cachedList
         })
-      }
+        
+        return true
+      } catch(_) {
+        const items = await api.list(name)
 
-      return items != null
+        if (items) {
+          sessionCache.saveList([{
+            label, items
+          }])
+
+          dispatch({
+            type: "kanji_list",
+            value: [{
+              label,
+              items
+            }]
+          })
+        }
+  
+        return items != null
+      }
     },
     async loadKanji(kanji: string) {
-      const previousKanjis: Map<any, any> = SessionCache.get("previous@kanjis")
+      try {
+        const cachedKanji = await sessionCache.loadKanji(kanji)
 
-      if (previousKanjis.has(kanji)) {
         dispatch({
           type: "kanji",
-          value: previousKanjis.get(kanji)
+          value: cachedKanji
         })
-
-        return true
-      }
-
-      const data = await api.kanji(kanji)
-      const words = await api.words(kanji)
-      
-      previousKanjis.set(kanji, {
-        data,
-        words
-      })
-
-      if (data && words) {
-        dispatch({
-          type: "kanji",
-          value: {
+      } catch(_) {
+        const data = await api.kanji(kanji)
+        const words = await api.words(kanji)
+        
+        if (data && words) {
+          sessionCache.saveKanji(kanji, {
             data,
             words
-          }
-        })
-      }
+          })
 
-      return data != null && words != null
+          dispatch({
+            type: "kanji",
+            value: {
+              data,
+              words
+            }
+          })
+        }
+  
+        return data != null && words != null
+      }
     },
     async loadReadings(reading: string) {
-      const readings = await api.readings(reading)
+      try {
+        const cachedReading = await sessionCache.loadReading(reading)
 
-      if (readings) {
         dispatch({
           type: "kanji_list",
-          value: [
-            {
-              label: `Kanjis for ${readings.reading}`,
-              items: readings.main_kanji
-            },
-            {
-              label: `Name kanjis for ${readings.reading}`,
-              items: readings.name_kanji
-            }
-          ]
+          value: cachedReading
         })
-      }
+      } catch (_) {
+        const readings = await api.readings(reading)
+  
+        if (readings) {
+          sessionCache.saveReading(
+            reading,
+            [
+              {
+                label: `Kanjis for ${readings.reading}`,
+                items: readings.main_kanji
+              },
+              {
+                label: `Name kanjis for ${readings.reading}`,
+                items: readings.name_kanji
+              }
+            ]
+          )
 
-      return readings != null
+          dispatch({
+            type: "kanji_list",
+            value: [
+              {
+                label: `Kanjis for ${readings.reading}`,
+                items: readings.main_kanji
+              },
+              {
+                label: `Name kanjis for ${readings.reading}`,
+                items: readings.name_kanji
+              }
+            ]
+          })
+        }
+  
+        return readings != null
+      }
     }
   }
 

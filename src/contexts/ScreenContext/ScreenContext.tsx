@@ -8,12 +8,16 @@ interface Props {
   children: any
 }
 
+interface ScreensMap {
+  [index: string]: () => JSX.Element
+}
+
 export const ScreenContext = createContext({} as any)
 
 export default function ScreenNavigator({children}: Props) {
-  const [screen, navigate] = useState("loading")
+  const [screen, setPage] = useState("loading")
 
-  const screens: {[index: string]: () => JSX.Element} = {
+  const screens: ScreensMap = {
     list: ListScreen,
     kanji: KanjiScreen,
     loading: LoadingScreen
@@ -21,7 +25,9 @@ export default function ScreenNavigator({children}: Props) {
 
   const context = {
     CurrentScreen: screens[screen],
-    navigate
+    navigate(page: string) {
+      setPage(page)
+    }
   }
 
   return (

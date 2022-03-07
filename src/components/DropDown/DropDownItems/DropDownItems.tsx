@@ -3,8 +3,8 @@ import { Fragment, useMemo } from "react";
 import styles from "./drop-down-items.module.css"
 
 interface Props {
-  items: KanjiListObject[],
-  onClick: (name: KanjiListObject) => void
+  items: KanjiCategoryRequest[],
+  onClick: (name: KanjiCategoryRequest) => void
 }
 
 export default function DropDownItems({items, onClick}: Props) {

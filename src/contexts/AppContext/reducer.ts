@@ -17,6 +17,12 @@ export default function(state: any, action: any) {
         ...state,
         kanjis: action.value
       }
+
+    case "lang":
+      return {
+        ...state,
+        lang: action.value
+      }
     
     default:
       return {...state}

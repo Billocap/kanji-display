@@ -40,7 +40,7 @@ const api = {
    * Gets the specified list.
    * @param list 
    */
-  list(list: KanjiListName): Promise<string[] | null> {
+  list(list: KanjiCategory): Promise<string[] | null> {
     return fetchJson(url("kanji", list))
   },
   /**

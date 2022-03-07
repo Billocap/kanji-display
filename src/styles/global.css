@@ -20,16 +20,19 @@ body, #root {
 }
 
 .tool-tip-holder:hover .tool-tip {
-  @apply block;
+  top: 100%;
+  opacity: 1;
 }
 
 .tool-tip {
-  @apply hidden whitespace-nowrap;
-  @apply absolute rounded top-[100%] z-10;
+  @apply whitespace-nowrap;
+  @apply absolute rounded top-[90%] z-10;
   @apply text-white text-xs p-2;
   @apply border border-gray-200;
   @apply bg-gray-100;
-  @apply mt-[10px];
+  @apply mt-[10px] pointer-events-none;
+  opacity: 0;
+  transition: opacity 0.2s, top 0.2s;
 }
 
 .tool-tip::before {
