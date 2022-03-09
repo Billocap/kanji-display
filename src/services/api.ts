@@ -8,7 +8,8 @@ type InformationType = "kanji" | "reading" | "words"
 const url = (type: InformationType, info: string) => `https://kanjiapi.dev/v1/${type}/${info}`
 
 /**
- * Fetches JSON data from the api and prevent errors from breaking the app.
+ * Fetches JSON data from the api and prevent errors from breaking the app by 
+ * returning `null` instead.
  * @param url The url to fetch the data from.
  */
 const fetchJson: (url: string) => Promise<any | null> = async (url) => {
@@ -26,7 +27,7 @@ const fetchJson: (url: string) => Promise<any | null> = async (url) => {
 };
 
 /**
- * Api wrapper
+ * Api wrapper.
  */
 const api = {
   /**

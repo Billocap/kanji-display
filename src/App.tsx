@@ -106,14 +106,6 @@ export default function App() {
           />
         </div>
         <div className="flex flex-row items-center justify-center flex-shrink-0 h-full">
-          {/* <div className="flex-shrink-0 border border-gray-200 rounded-md my-2 text-xs mr-2">
-            <button className="py-1 px-2 border-r border-r-gray-200" onClick={() => setLang("en")}>
-              かな
-            </button>
-            <button className="py-1 px-2" onClick={() => setLang("jp")}>
-              Aa
-            </button>
-          </div> */}
           <DropDown
             text="Lists"
             onClick={list => {

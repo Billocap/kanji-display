@@ -1,4 +1,4 @@
-const defaultContext = {
+export const initialValue: AppState = {
   kanjis: [],
   kanjiList: [
     {
@@ -35,8 +35,30 @@ const defaultContext = {
         ]
       }
     ]
-  },
-  lang: "jp"
+  }
 }
 
-export default defaultContext
+export function reducer(state: AppState, action: AppAction): AppState {
+  switch (action.type) {
+    case "kanji_list":
+      return {
+        ...state,
+        kanjiList: action.value
+      }
+    
+    case "kanji":
+      return {
+        ...state,
+        kanji: action.value
+      }
+    
+    case "kanjis":
+      return {
+        ...state,
+        kanjis: action.value
+      }
+    
+    default:
+      return {...state}
+  }
+}

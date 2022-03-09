@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 /**
- * All categories a kanji can be at
+ * All categories a kanji can be at.
  */
 type KanjiCategory =
   "joyo" | "jouyou" | "jinmeiyo" | "jinmeiyou" | "all" |
@@ -13,7 +13,28 @@ interface KanjiCategoryRequest {
   name: KanjiCategory
 }
 
+// #region Model
+/**
+ * Represents the full collection of data about the kanji.
+ */
+interface KanjiModel {
+  data: KanjiData,
+  words: KanjiWord[]
+}
+
+/**
+ * Represents a lists of kanjis organized based on some common characteristics.
+ */
+interface KanjiListModel {
+  label: string,
+  items: string[]
+}
+// #endregion Model
+
 // #region KanjiApi
+/**
+ * General data about a kanji character.
+ */
 interface KanjiData {
   kanji: string,
   unicode: string,
@@ -27,6 +48,9 @@ interface KanjiData {
   name_readings: string[]
 }
 
+/**
+ * Lists the kanjis that can be read as the required reading.
+ */
 interface KanjiReadings {
   reading: string,
   main_kanji: string[],
@@ -48,13 +72,51 @@ interface KanjiWord {
   variants: KanjiWordVariant[]
 }
 
+/**
+ * Lists all possible words where the kanji appear at.
+ */
 type KanjiWordsList = KanjiWord[]
 // #endregion
 
-interface AppContext {
+// #region AppControl
+/**
+ * General state of the app.
+ */
+interface AppState {
+  /**
+   * Special list for validating the kanjis.
+   */
   kanjis: string[],
-  kanjiList: {
-    label: string,
-    items: number[]
-  }[]
+  /**
+   * Current list of kanjis.
+   */
+  kanjiList: KanjiListModel[],
+  /**
+   * Current kanji.
+   */
+  kanji: KanjiModel
 }
+
+interface KanjiListAction {
+  type: "kanji_list",
+  value: KanjiListModel[]
+}
+
+interface KanjiAction {
+  type: "kanji",
+  value: {
+    data: KanjiData,
+    words: KanjiWordsList
+  }
+}
+
+interface KanjisAction {
+  type: "kanjis",
+  value: string[]
+}
+
+/**
+ * All possible actions the reducer can take to change the state of the app.
+ */
+type AppAction = KanjiAction | KanjiListAction | KanjisAction
+// #endregion AppControl

@@ -1,8 +1,3 @@
-interface Kanji {
-  data: KanjiData,
-  words: KanjiWordsList
-}
-
 export default class SessionCache extends Map {
   constructor() {
     super()
@@ -13,39 +8,23 @@ export default class SessionCache extends Map {
   }
 
   loadCategory(label: string) {
-    const cached: KanjiCategoryRequest = this.get("list")
+    const cached: KanjiListModel = this.get("list")
 
-    return new Promise<KanjiCategoryRequest>(
-      (resolve, reject) => {
-        if (cached.label == label) {
-          resolve(cached)
-        } else {
-          reject()
-        }
-      }
-    )
+    return cached.label == label ? cached : null
   }
 
-  saveList(list: any) {
-    this.set("list", list)
+  saveList(list: KanjiListModel[]) {
+    return this.set("list", list)
   }
 
   loadKanji(kanji: string) {
-    const cached: Map<string, Kanji> = this.get("kanjis")
+    const cached: Map<string, KanjiModel> = this.get("kanjis")
 
-    return new Promise<Kanji>(
-      (resolve, reject) => {
-        if (cached.has(kanji)) {
-          resolve(cached.get(kanji) as Kanji)
-        } else {
-          reject()
-        }
-      }
-    )
+    return cached.has(kanji) ? cached.get(kanji) : null
   }
 
-  saveKanji(kanji: string, data: Kanji) {
-    let cached: Map<string, Kanji> = this.get("kanjis")
+  saveKanji(kanji: string, data: KanjiModel) {
+    let cached: Map<string, KanjiModel> = this.get("kanjis")
 
     cached.set(kanji, data)
 
@@ -55,21 +34,13 @@ export default class SessionCache extends Map {
       cached = new Map(striped)
     }
 
-    this.set("kanjis", cached)
+    return this.set("kanjis", cached)
   }
 
   loadReading(reading: string) {
     const cached: Map<string, any> = this.get("readings")
 
-    return new Promise<any>(
-      (resolve, reject) => {
-        if (cached.has(reading)) {
-          resolve(cached.get(reading) as any)
-        } else {
-          reject()
-        }
-      }
-    )
+    return cached.has(reading) ? cached.get(reading) : null
   }
 
   saveReading(reading: string, data: any) {
@@ -83,6 +54,6 @@ export default class SessionCache extends Map {
       cached = new Map(striped)
     }
 
-    this.set("readings", cached)
+    return this.set("readings", cached)
   }
 }
