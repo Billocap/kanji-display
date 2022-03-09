@@ -91,6 +91,8 @@ export default function AppController({children}: Props) {
 
         if (!backupKanji) throw new Error()
 
+        sessionCache.saveKanji(kanji, backupKanji)
+
         dispatch({
           type: "kanji",
           value: backupKanji
@@ -134,6 +136,8 @@ export default function AppController({children}: Props) {
         const backupReading = await backup.loadReading(reading)
 
         if (!backupReading) throw new Error()
+
+        sessionCache.saveReading(reading, backupReading)
 
         dispatch({
           type: "kanji_list",

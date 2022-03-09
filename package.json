@@ -1,7 +1,7 @@
 {
-  "name": "kanji-vizualizer",
+  "name": "kanji-display",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.6.2",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
