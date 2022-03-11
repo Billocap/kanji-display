@@ -1,7 +1,6 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useContext, useEffect } from "react"
-import { toHiragana, toKatakana } from "wanakana"
 
 import DropDown from "./components/DropDown"
 import SearchBar from "./components/SearchBar"
@@ -81,23 +80,8 @@ export default function App() {
               
               navigate("loading")
             }}
-            searchOnyomi={onyomi => {
-              loadReadings(toKatakana(onyomi, {
-                customKanaMapping: {
-                  "-": "-"
-                }
-              })).then(() => {
-                navigate("list")
-              })
-              
-              navigate("loading")
-            }}
-            searchKunyomi={kunyomi => {
-              loadReadings(toHiragana(kunyomi, {
-                customKanaMapping: {
-                  "-": "-"
-                }
-              })).then(() => {
+            searchReading={reading => {
+              loadReadings(reading).then(() => {
                 navigate("list")
               })
               
@@ -108,6 +92,7 @@ export default function App() {
         <div className="flex flex-row items-center justify-center flex-shrink-0 h-full">
           <DropDown
             text="Lists"
+            items={lists as any}
             onClick={list => {
               loadCategory(list).then(() => {
                 navigate("list")
@@ -115,8 +100,7 @@ export default function App() {
               
               navigate("loading")
             }}
-            items={lists as any}
-          />
+            />
           <a className="ml-2" href="https://github.com/Billocap/Kanji-Display" target="_blank" rel="noreferrer">
             <FontAwesomeIcon
               className="text-2xl hover:text-white text-gray-500 md:mx-4 mx-2"

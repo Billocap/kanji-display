@@ -26,7 +26,7 @@ export default function ListScreen() {
           }}/>
         })
       }
-      <button onClick={backToTop} className="scroll-spy">
+      <button onClick={() => backToTop()} className="scroll-spy">
         <FontAwesomeIcon icon={faChevronUp}/>
       </button>
     </div>

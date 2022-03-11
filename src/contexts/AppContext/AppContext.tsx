@@ -2,7 +2,7 @@ import {createContext, useEffect, useReducer} from "react"
 
 import api from "../../services/api"
 import backup from "../../services/backup"
-import SessionCache from "../../lib/SessionCache"
+import sessionCache from "../../services/cache"
 
 import {initialValue, reducer} from "./state"
 
@@ -14,31 +14,18 @@ interface AppContext extends AppState {
   [index: string]: any
 }
 
-const sessionCache = new SessionCache()
-
 export const AppContext = createContext({} as AppContext)
 
 export default function AppController({children}: Props) {
   const [state, dispatch] = useReducer(reducer, initialValue)
 
   useEffect(() => {
-    const cached = localStorage.getItem("kanji-display@valid-kanjis")
-
-    if (cached) {
-      dispatch({
-        type: "kanjis",
-        value: JSON.parse(cached)
-      })
-    } else {
-      api.list("all").then(list => {
-        dispatch({
-          type: "kanjis",
-          value: list || []
-        })
-
-        localStorage.setItem("kanji-display@valid-kanjis", JSON.stringify(list))
-      })
-    }
+    setInterval(() => {
+      localStorage.setItem(
+        "kanji-display@cache",
+        JSON.stringify(sessionCache.data)
+      )
+    }, 30 * 1000)
   }, [])
 
   const context: AppContext = {
@@ -59,16 +46,13 @@ export default function AppController({children}: Props) {
       const items = await api.list(name)
 
       if (items) {
-        sessionCache.saveList([{
-          label, items
-        }])
+        const listData = [{label, items}]
+
+        sessionCache.saveCategory(listData)
 
         dispatch({
           type: "kanji_list",
-          value: [{
-            label,
-            items
-          }]
+          value: listData
         })
       }
 
@@ -88,8 +72,6 @@ export default function AppController({children}: Props) {
       
       try {
         const backupKanji = await backup.loadKanji(kanji)
-
-        if (!backupKanji) throw new Error()
 
         sessionCache.saveKanji(kanji, backupKanji)
 
@@ -134,8 +116,6 @@ export default function AppController({children}: Props) {
 
       try {
         const backupReading = await backup.loadReading(reading)
-
-        if (!backupReading) throw new Error()
 
         sessionCache.saveReading(reading, backupReading)
 

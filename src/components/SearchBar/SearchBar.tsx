@@ -1,7 +1,7 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Fragment, useContext, useState } from "react"
-import { isHiragana, toHiragana, toKatakana } from "wanakana"
+import { isHiragana, toHiragana, toKatakana, toRomaji } from "wanakana"
 
 import { AppContext } from "../../contexts/AppContext"
 
@@ -9,26 +9,46 @@ import styles from "./search-bar.module.css"
 
 interface Props {
   searchKanji: (kanji: string) => void,
-  searchOnyomi: (onyomi: string) => void,
-  searchKunyomi: (kunyomi: string) => void
+  searchReading: (reading: string) => void
 }
 
-export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Props) {
+interface ReadingOptionProps {
+  reading: string,
+  type: string,
+  searchReading: (reading: string) => void
+}
+
+function ReadingOption({reading, type, searchReading}: ReadingOptionProps) {
+  return (
+    <button onClick={() => searchReading(reading)}>
+      {toRomaji(reading)}
+      <span>{reading} - {type}</span>
+    </button>
+  )
+}
+
+interface KanjiOptionProps {
+  kanji: string,
+  searchKanji: (kanji: string) => void
+}
+
+function KanjiOption({kanji, searchKanji}: KanjiOptionProps) {
+  return (
+    <button onClick={() => searchKanji(kanji)}>
+      {kanji}
+      <span>漢字</span>
+    </button>
+  )
+}
+
+export default function SearchBar({searchKanji, searchReading}: Props) {
   const [query, setQuery] = useState("")
   const [extended, setExtended] = useState(false)
 
-  const {kanjis, cache} = useContext(AppContext)
+  const {cache} = useContext(AppContext)
 
-  const previousKanjis = cache.get("kanjis")
-  const previousReadings = cache.get("readings")
-
-  const searchKanjiHandler = () => {
-    if (kanjis.includes(query)) {
-      searchKanji(query)
-    } else {
-      alert("Invalid Kanji!")
-    }
-  }
+  const previousKanjis: string[] = cache.get("kanjis")
+  const previousReadings: string[] = cache.get("readings")
 
   const getClass = () => {
     return extended ? styles.open : ""
@@ -36,32 +56,21 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
 
   const searchOptions = () => {
     if (query.length) {
-      if (kanjis.includes(query)) {
-        return (
-          <button onClick={searchKanjiHandler}>
-            {query}
-            <span>漢字</span>
-          </button>
-        )
+      if (query.match(/[^A-Za-z.-]+/)) {
+        return <KanjiOption kanji={query} searchKanji={searchKanji}/>
       } else {
         return (
           <Fragment>
-            <button onClick={() => searchOnyomi(query)}>
-              {query}
-              <span>
-                {toKatakana(query)}
-                -
-                音読み
-              </span>
-            </button>
-            <button onClick={() => searchKunyomi(query)}>
-              {query}
-              <span>
-                {toHiragana(query)}
-                -
-                訓読み
-              </span>
-            </button>
+            <ReadingOption
+              reading={toKatakana(query)}
+              type="音読み"
+              searchReading={searchReading}
+            />
+            <ReadingOption
+              reading={toHiragana(query)}
+              type="訓読み"
+              searchReading={searchReading}
+            />
           </Fragment>
         )
       }
@@ -72,12 +81,12 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
     <div className={[styles.container, getClass()].join(" ")}>
       <input
         onChange={e => {
-          if (previousReadings.size || previousKanjis.size || query.length) setExtended(true)
+          if (previousReadings.length || previousKanjis.length || query.length) setExtended(true)
           
           setQuery(e.target.value)
         }}
         onFocus={() => {
-          if (previousReadings.size || previousKanjis.size || query.length) setExtended(true)
+          if (previousReadings.length || previousKanjis.length || query.length) setExtended(true)
         }}
         onBlur={() => {
           setTimeout(() => {
@@ -95,31 +104,20 @@ export default function SearchBar({searchKanji, searchOnyomi, searchKunyomi}: Pr
         className={styles.searchOptions}
       >
         {searchOptions()}
-        {Array.from<any>(previousKanjis.keys()).map((item, id) => {
-          return (
-            <button key={id} onClick={() => searchKanji(item)}>
-              {item}
-              <span>漢字</span>
-            </button>
-          )
+        {previousKanjis.map((item, id) => {
+          return <KanjiOption
+            key={id}
+            kanji={item}
+            searchKanji={searchKanji}
+          />
         })}
-        {Array.from<any>(previousReadings.keys()).map((item, id) => {
-          return (
-            <button key={id} onClick={() => {
-              if (isHiragana(item)) {
-                searchKunyomi(item)
-              } else {
-                searchOnyomi(item)
-              }
-            }}>
-              {item}
-              <span>
-                {item}
-                -
-                {isHiragana(item) ? "訓読み" : "音読み"}
-              </span>
-            </button>
-          )
+        {previousReadings.map((item, id) => {
+          return <ReadingOption
+            key={id}
+            reading={item}
+            type={isHiragana(item) ? "訓読み" : "音読み"}
+            searchReading={searchReading}
+          />
         })}
       </div>
     </div>

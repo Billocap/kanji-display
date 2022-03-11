@@ -76,10 +76,14 @@ const backup = {
   
     const request: IDBRequest<IDBDataRequest<KanjiModel>> = kanjis.get(kanji)
   
-    return new Promise<KanjiModel | undefined>(
+    return new Promise<KanjiModel>(
       (resolve, reject) => {
         request.onsuccess = function() {
-          if (!request.result) resolve(request.result)
+          if (!request.result) {
+            reject("Kanji not found.")
+
+            return null
+          }
 
           resolve(request.result.data)
         }
@@ -123,10 +127,14 @@ const backup = {
   
     const request: IDBRequest<IDBDataRequest<KanjiListModel[]>> = readings.get(reading)
   
-    return new Promise<KanjiListModel[] | undefined>(
+    return new Promise<KanjiListModel[]>(
       (resolve, reject) => {
         request.onsuccess = function() {
-          if (!request.result) resolve(request.result)
+          if (!request.result) {
+            reject("Reading not found.")
+
+            return null
+          }
 
           resolve(request.result.data)
         }

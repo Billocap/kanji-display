@@ -84,10 +84,6 @@ type KanjiWordsList = KanjiWord[]
  */
 interface AppState {
   /**
-   * Special list for validating the kanjis.
-   */
-  kanjis: string[],
-  /**
    * Current list of kanjis.
    */
   kanjiList: KanjiListModel[],
@@ -109,14 +105,8 @@ interface KanjiAction {
     words: KanjiWordsList
   }
 }
-
-interface KanjisAction {
-  type: "kanjis",
-  value: string[]
-}
-
 /**
  * All possible actions the reducer can take to change the state of the app.
  */
-type AppAction = KanjiAction | KanjiListAction | KanjisAction
+type AppAction = KanjiAction | KanjiListAction
 // #endregion AppControl

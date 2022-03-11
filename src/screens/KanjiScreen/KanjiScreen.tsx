@@ -19,7 +19,7 @@ export default function KanjiScreen() {
   const {kanji, loadReadings} = useContext(AppContext)
   const {navigate} = useContext(ScreenContext)
 
-  const handleScroll = () => {
+  const loadOnScroll = () => {
     const target = loaded.current
 
     if (target) {
@@ -40,7 +40,7 @@ export default function KanjiScreen() {
   }
 
   return (
-    <div ref={scrolled} className={styles.container} onScroll={handleScroll}>
+    <div ref={scrolled} className={styles.container} onScroll={loadOnScroll}>
       <KanjiInfo kanji={kanji.data}/>
       <div className={styles.grammar}>
         <GrammarList
@@ -76,7 +76,7 @@ export default function KanjiScreen() {
           return <KanjiWord key={id} word={word}/>
         })}
       </div>
-      <button onClick={backToTop} className="scroll-spy">
+      <button onClick={() => backToTop()} className="scroll-spy">
         <FontAwesomeIcon icon={faChevronUp}/>
       </button>
     </div>

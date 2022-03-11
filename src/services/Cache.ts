@@ -1,54 +1,50 @@
 const savedCache = localStorage.getItem("kanji-display@cache")
 
 const cacheData = savedCache ? JSON.parse(savedCache) : {
+  category: [],
   kanjis: {},
-  list: [],
   readings: {}
 }
 
 const cache = {
-  ...cacheData,
+  data: cacheData,
+  get(data: string) {
+    return Object.getOwnPropertyNames(this.data[data])
+  },
+
   loadCategory(label: string) {
-    const cached: KanjiListModel = this.list
+    const cached: KanjiListModel = this.data.category
 
     return cached.label == label ? cached : null
   },
-  saveList(list: KanjiListModel[]) {
-    this.list = list
+  saveCategory(category: KanjiListModel[]) {
+    this.data.category = category
   },
+
   loadKanji(kanji: string) {
-    return this.kanjis[kanji] || null
+    return this.data.kanjis[kanji] || null
   },
   saveKanji(kanji: string, data: KanjiModel) {
-    let cached: Map<string, KanjiModel> = this.get("kanjis")
+    let cached = Object.entries(this.data.kanjis)
 
-    cached.set(kanji, data)
+    cached.push([kanji, data])
 
-    if (cached.size >= 5) {
-      const striped = Array.from(cached.entries()).slice(-5)
-
-      cached = new Map(striped)
-    }
-
-    return this.set("kanjis", cached)
+    if (cached.length > 5) cached = cached.slice(-5)
+    
+    this.data.kanjis = Object.fromEntries(cached)
   },
-  loadReading(reading: string) {
-    const cached: Map<string, any> = this.get("readings")
 
-    return cached.has(reading) ? cached.get(reading) : null
+  loadReading(reading: string) {
+    return this.data.readings[reading] || null
   },
   saveReading(reading: string, data: any) {
-    let cached: Map<string, any> = this.get("readings")
+    let cached = Object.entries(this.data.readings)
 
-    cached.set(reading, data)
+    cached.push([reading, data])
 
-    if (cached.size >= 5) {
-      const striped = Array.from(cached.entries()).slice(-5)
-
-      cached = new Map(striped)
-    }
-
-    return this.set("readings", cached)
+    if (cached.length > 5) cached = cached.slice(-5)
+    
+    this.data.readings = Object.fromEntries(cached)
   }
 }
 

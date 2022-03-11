@@ -1,5 +1,4 @@
 export const initialValue: AppState = {
-  kanjis: [],
   kanjiList: [
     {
       label: "",
@@ -50,12 +49,6 @@ export function reducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         kanji: action.value
-      }
-    
-    case "kanjis":
-      return {
-        ...state,
-        kanjis: action.value
       }
     
     default:
