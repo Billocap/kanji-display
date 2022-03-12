@@ -32,7 +32,7 @@ export default function AppController({children}: Props) {
     ...state,
     cache: sessionCache,
     async loadCategory({label, name}: KanjiCategoryRequest) {
-      const cachedList = sessionCache.loadCategory(label)
+      const cachedList = await sessionCache.loadCategory(label)
       
       if (cachedList) {
         dispatch({
@@ -59,7 +59,7 @@ export default function AppController({children}: Props) {
       return items != null
     },
     async loadKanji(kanji: string) {
-      const cachedKanji = sessionCache.loadKanji(kanji)
+      const cachedKanji = await sessionCache.loadKanji(kanji)
 
       if (cachedKanji) {
         dispatch({
@@ -103,7 +103,7 @@ export default function AppController({children}: Props) {
       }
     },
     async loadReadings(reading: string) {
-      const cachedReading = sessionCache.loadReading(reading)
+      const cachedReading = await sessionCache.loadReading(reading)
 
       if (cachedReading) {
         dispatch({

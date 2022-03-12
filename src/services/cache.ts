@@ -15,14 +15,22 @@ const cache = {
   loadCategory(label: string) {
     const cached: KanjiListModel = this.data.category
 
-    return cached.label == label ? cached : null
+    return new Promise<KanjiListModel | null>(
+      (resolve) => {
+        resolve(cached.label == label ? cached : null)
+      }
+    )
   },
   saveCategory(category: KanjiListModel[]) {
     this.data.category = category
   },
 
   loadKanji(kanji: string) {
-    return this.data.kanjis[kanji] || null
+    return new Promise<KanjiModel | null>(
+      (resolve) => {
+        resolve(this.data.kanjis[kanji] || null)
+      }
+    )
   },
   saveKanji(kanji: string, data: KanjiModel) {
     let cached = Object.entries(this.data.kanjis)
@@ -35,7 +43,11 @@ const cache = {
   },
 
   loadReading(reading: string) {
-    return this.data.readings[reading] || null
+    return new Promise<KanjiListModel[] | null>(
+      (resolve) => {
+        resolve(this.data.readings[reading] || null)
+      }
+    )
   },
   saveReading(reading: string, data: any) {
     let cached = Object.entries(this.data.readings)
